@@ -132,14 +132,11 @@ window.onload = wrap_img;
 
   <div class="post-content e-content" itemprop="articleBody">
     <ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#Choice-of-variables">Choice of variables </a>
-<ul>
+<li class="toc-entry toc-h3"><a href="#Choice-of-variables">Choice of variables </a></li>
 <li class="toc-entry toc-h3"><a href="#Step-1:-Data-Acquisition">Step 1: Data Acquisition </a></li>
 <li class="toc-entry toc-h3"><a href="#Step-2:-Encoder-Fine-tuning-[optional]">Step 2: Encoder Fine-tuning [optional] </a></li>
 <li class="toc-entry toc-h3"><a href="#Step-3:-Image-Vectorization">Step 3: Image Vectorization </a></li>
 <li class="toc-entry toc-h3"><a href="#Step-4:-Metadata-and-Indexing">Step 4: Metadata and Indexing </a></li>
-</ul>
-</li>
 <li class="toc-entry toc-h2"><a href="#Step-5:-Local-Testing">Step 5: Local Testing </a></li>
 <li class="toc-entry toc-h2"><a href="#Step-6:-API-Call">Step 6: API Call </a>
 <ul>
@@ -180,9 +177,9 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Choice-of-variables">
+<h3 id="Choice-of-variables">
 <a class="anchor" href="#Choice-of-variables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Choice of variables<a class="anchor-link" href="#Choice-of-variables"> </a>
-</h2>
+</h3>
 <ul>
 <li>Image Encoder: Any pre-trained image classification model can be selected. These models are commonly known as encoders because their job is to encode an image into a feature vector. In our case, we analyzed four encoders named 1) MobileNet, 2) EfficientNet, 3) ResNet and 4) <a href="https://tfhub.dev/google/bit/m-r152x4/1">BiT</a>. After some basic research, we decided to select BiT model because of its performance. I selected the BiT-M-50x3 variant of model which is of size 748 MB. More details about this architecture can be found on the official page <a href="https://tfhub.dev/google/bit/m-r50x3/1">here</a>.</li>
 <li>Vector Similarity System: Images are represented in a fixed-length feature vector format. For the given input vector, we need to find the TopK most similar vectors, keeping the memory efficiency and real-time retrival objective in mind. We explored the most popular techniques and listed down five of them: Annoy, Cosine distance, L1 distance, Locally Sensitive Hashing (LSH) and Image Deep Ranking. We selected Annoy because of its fast and efficient nature. More details about Annoy can be found on the official page <a href="https://github.com/spotify/annoy">here</a>.</li>
