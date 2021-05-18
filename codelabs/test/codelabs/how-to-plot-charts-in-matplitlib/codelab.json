@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2021-05-18T08:30:36Z",
+  "id": "how-to-plot-charts-in-matplitlib",
+  "duration": 3,
+  "title": "How to Write a Codelab",
+  "authors": "Sparsh A.",
+  "summary": "How to plot charts using matplotlib",
+  "source": "codelabs-tutorial-test.md",
+  "theme": "",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "python",
+    "matplotlib"
+  ],
+  "tags": [
+    "python"
+  ],
+  "feedback": "https://sparsh-ai.github.com",
+  "url": "how-to-plot-charts-in-matplitlib"
+}
