@@ -42,14 +42,23 @@ for p in image_paths:
 sourcestr = [replacer(x) for x in image_paths]
 targetstr = [replacer(x, True) for x in renamed_image_paths]
 
+sourcestr2 = ['comments: No', 'hide: No', 'toc: No',
+              'comments: Yes', 'hide: Yes', 'toc: Yes']
+
+targetstr2 = ['comments: false', 'hide: false', 'toc: false',
+              'comments: true', 'hide: true', 'toc: true']
+
 for p in Path(source_path).rglob('*.md'):
   with open(p, 'r') as fin:
     data = fin.read()
     for check, rep in zip(sourcestr, targetstr):
       data = data.replace(check, rep)
+    for check, rep in zip(sourcestr2, targetstr2):
+      data = data.replace(check, rep)
     data = data.splitlines(True)
+    data = ['---\n'] + data[2:]
   with open(p, 'w') as fout:
-    fout.writelines(data[2:])
+    fout.writelines(data)
   newname = clean_path("2020-01-14-"+p.name)
   newpath = Path(os.path.join(p.parent,newname))
   os.rename(p, newpath)
