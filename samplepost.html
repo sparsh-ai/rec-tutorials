@@ -1,19 +1,143 @@
-<p>author: Sparsh Agarwal
-categories: codespaces
-comments: No
-date: Jun 6, 2021
-description: A minimal example of using markdown with fastpages
-hide: No
-image: images/fastpages_posts/actions/actions_logo.png
-layout: post
-permalink: /samplepost
-toc: Yes</p>
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Nbdev Github Codespaces A New Literate Programming | rec-tutorials</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Nbdev Github Codespaces A New Literate Programming" />
+<meta name="author" content="Sparsh Agarwal" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A minimal example of using markdown with fastpages" />
+<meta property="og:description" content="A minimal example of using markdown with fastpages" />
+<link rel="canonical" href="https://sparsh-ai.github.io/rec-tutorials/samplepost" />
+<meta property="og:url" content="https://sparsh-ai.github.io/rec-tutorials/samplepost" />
+<meta property="og:site_name" content="rec-tutorials" />
+<meta property="og:image" content="https://sparsh-ai.github.io/rec-tutorials/images/fastpages_posts/actions/actions_logo.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-06-06T00:00:00-05:00" />
+<script type="application/ld+json">
+{"url":"https://sparsh-ai.github.io/rec-tutorials/samplepost","@type":"BlogPosting","headline":"Nbdev Github Codespaces A New Literate Programming","dateModified":"2021-06-06T00:00:00-05:00","datePublished":"2021-06-06T00:00:00-05:00","image":"https://sparsh-ai.github.io/rec-tutorials/images/fastpages_posts/actions/actions_logo.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://sparsh-ai.github.io/rec-tutorials/samplepost"},"author":{"@type":"Person","name":"Sparsh Agarwal"},"description":"A minimal example of using markdown with fastpages","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/rec-tutorials/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://sparsh-ai.github.io/rec-tutorials/feed.xml" title="rec-tutorials" /><link rel="shortcut icon" type="image/x-icon" href="/rec-tutorials/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
 
-<hr>
 
-<h1 id="example-markdown-post">Example Markdown Post</h1>
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
 
-<h2 id="introduction">Introduction</h2>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+<a class="site-title" rel="author" href="/rec-tutorials/">rec-tutorials</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewbox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+<a class="page-link" href="/rec-tutorials/about/">About Me</a><a class="page-link" href="/rec-tutorials/search/">Search</a><a class="page-link" href="/rec-tutorials/categories/">Tags</a>
+</div>
+      </nav>
+</div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Nbdev Github Codespaces A New Literate Programming</h1>
+<p class="page-description">A minimal example of using markdown with fastpages</p>
+<p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-06-06T00:00:00-05:00" itemprop="datePublished">
+        Jun 6, 2021
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Sparsh Agarwal</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      6 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i> 
+      
+        <a class="category-tags-link" href="/rec-tutorials/categories/#codespaces">codespaces</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1">
+<a href="#example-markdown-post">Example Markdown Post</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#introduction">Introduction</a></li>
+<li class="toc-entry toc-h2"><a href="#features-of-nbdev">Features of nbdev</a></li>
+<li class="toc-entry toc-h2"><a href="#github-codespaces">GitHub Codespaces</a></li>
+<li class="toc-entry toc-h2"><a href="#a-demo-of-nbdev--codespaces">A demo of nbdev + Codespaces</a></li>
+<li class="toc-entry toc-h2"><a href="#give-it-a-try-for-yourself">Give It A Try For Yourself</a></li>
+<li class="toc-entry toc-h2"><a href="#you-can-write-blogs-with-notebooks-too">You Can Write Blogs With Notebooks, Too!</a></li>
+<li class="toc-entry toc-h2"><a href="#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="example-markdown-post">
+<a class="anchor" href="#example-markdown-post" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Markdown Post</h1>
+
+<h2 id="introduction">
+<a class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
 <blockquote>
   <p>Literate programming is a programming paradigm introduced by Donald Knuth in which a computer program is given an explanation of its logic in a natural language, such as English, interspersed with snippets of macros and traditional source code, from which compilable source code can be generated.  According to Knuth, literate programming provides higher-quality programs by forcing programmers to explicitly state the thoughts behind the program.  This process makes poorly thought-out design decisions more obvious. Knuth also claims that literate programming provides a first-rate documentation system, which is not an add-on, but is grown naturally in the process of exposition of one’s thoughts during a program’s creation. <sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
@@ -40,7 +164,8 @@ toc: Yes</p>
 
 <p><br></p>
 
-<h2 id="features-of-nbdev">Features of nbdev</h2>
+<h2 id="features-of-nbdev">
+<a class="anchor" href="#features-of-nbdev" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features of nbdev</h2>
 
 <p>As discussed in the <a href="https://nbdev.fast.ai/">docs</a>, nbdev provides the following features:</p>
 
@@ -54,7 +179,8 @@ toc: Yes</p>
 
 <p>Since you are in a notebook, you can also add charts, text, links, images, videos, etc, that are included automatically in the documentation of your library, along with standardized documentation generated automatically from your code.  <a href="https://docs.fast.ai/">This site</a> is an example of docs generated automatically by nbdev.</p>
 
-<h2 id="github-codespaces">GitHub Codespaces</h2>
+<h2 id="github-codespaces">
+<a class="anchor" href="#github-codespaces" aria-hidden="true"><span class="octicon octicon-link"></span></a>GitHub Codespaces</h2>
 
 <p>Thanks to <a href="https://docs.conda.io/en/latest/">Conda</a> and <a href="https://github.com/fastai/nbdev_template">nbdev_template</a>, setting up a development environment with nbdev is far easier than it used to be. However, we realized it could be even easier, thanks to a new GitHub product called <a href="https://github.com/features/codespaces">Codespaces</a>.  Codespaces is a fully functional development environment in your browser, accessible directly from GitHub, that provides the following features:</p>
 
@@ -69,7 +195,8 @@ toc: Yes</p>
 
 <p>Codespaces enables developers to immediately participate in a project without wasting time on DevOps or complicated setup steps.  Most importantly, CodeSpaces with nbdev allows developers to quickly get started with creating their own software with literate programming.</p>
 
-<h2 id="a-demo-of-nbdev--codespaces">A demo of nbdev + Codespaces</h2>
+<h2 id="a-demo-of-nbdev--codespaces">
+<a class="anchor" href="#a-demo-of-nbdev--codespaces" aria-hidden="true"><span class="octicon octicon-link"></span></a>A demo of nbdev + Codespaces</h2>
 
 <p>This demo uses the project <a href="https://github.com/fastai/fastcore">fastai/fastcore</a>, which was built with nbdev, as an example.   First, we can navigate to this repo and launch a Codespace:</p>
 
@@ -113,15 +240,18 @@ toc: Yes</p>
 
 <p>This is just the tip of the iceberg.  There are additional utilities for <a href="https://nbdev.fast.ai/test.html">writing and executing tests</a>, <a href="https://nbdev.fast.ai/sync.html#Diff-notebook---library">diffing notebooks</a>, <a href="https://nbdev.fast.ai/magic_flags.html#How-do-comment-flags-correspond-to-magic-flags?">special flags</a> for hiding, showing, and collapsing cells in the generated docs, as well as <a href="https://nbdev.fast.ai/cli.html#nbdev_install_git_hooks">git hooks</a> for automation.  This and more functionality is covered in <a href="https://nbdev.fast.ai/">the nbdev docs</a>.</p>
 
-<h2 id="give-it-a-try-for-yourself">Give It A Try For Yourself</h2>
+<h2 id="give-it-a-try-for-yourself">
+<a class="anchor" href="#give-it-a-try-for-yourself" aria-hidden="true"><span class="octicon octicon-link"></span></a>Give It A Try For Yourself</h2>
 
 <p>To try out nbdev yourself, <a href="https://nbdev.fast.ai/tutorial.html">take this tutorial</a>, which will walk you through everything you need to know.  The tutorial also shows you how to use a repository template with the configuration files necessary to enable Codespaces with nbdev.</p>
 
-<h2 id="you-can-write-blogs-with-notebooks-too">You Can Write Blogs With Notebooks, Too!</h2>
+<h2 id="you-can-write-blogs-with-notebooks-too">
+<a class="anchor" href="#you-can-write-blogs-with-notebooks-too" aria-hidden="true"><span class="octicon octicon-link"></span></a>You Can Write Blogs With Notebooks, Too!</h2>
 
 <p>This blog post was written in <a href="https://github.com/fastai/fastpages">fastpages</a> which is also built on nbdev!  We recommend <a href="https://github.com/fastai/fastpages">fastpages</a> if you want an easy way to blog with Jupyter notebooks.</p>
 
-<h2 id="additional-resources">Additional Resources</h2>
+<h2 id="additional-resources">
+<a class="anchor" href="#additional-resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Additional Resources</h2>
 
 <ol>
   <li>The <a href="https://github.com/features/codespaces">GitHub Codepaces site</a>.</li>
@@ -145,3 +275,38 @@ toc: Yes</p>
     </li>
   </ol>
 </div>
+
+  </div>
+<a class="u-url" href="/rec-tutorials/samplepost" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/rec-tutorials/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/rec-tutorials/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/rec-tutorials/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Tutorials on Recommender Systems with ready-to-use jupyter notebooks</p>
+      </div>
+    </div>
+
+    <div class="social-links">
+<ul class="social-media-list"><li><a rel="me" href="https://github.com/sparsh-ai" title="sparsh-ai"><svg class="svg-icon grey"><use xlink:href="/rec-tutorials/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
