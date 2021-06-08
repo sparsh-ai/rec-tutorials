@@ -33,7 +33,7 @@ jobs:
     - name: convert markdowns to posts
       run: |
         wget -O ./_posts/raw/data.zip ${{ secrets.NOTION_RECOBLOG }}
-        sudo -E python convert.py
+        python convert.py
 
     - name: convert notebooks and word docs to posts
       uses: ./_action_files
@@ -54,6 +54,10 @@ jobs:
       run: |
         sudo chmod -R 777 _site/
         cp CNAME _site/ 2>/dev/null || :
+
+    - name: copy markdown linked images
+      run: |
+        cp -r ./_posts/img/*.png ./images
 
     - name: Deploy
       if: github.event_name == 'push'
