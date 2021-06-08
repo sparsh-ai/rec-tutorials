@@ -30,6 +30,11 @@ jobs:
       with:
         persist-credentials: false
 
+    - name: convert markdowns to posts
+      run: |
+        wget -O ./_posts/raw/data.zip ${{ secrets.NOTION_RECOBLOG }}
+        python convert.py
+
     - name: convert notebooks and word docs to posts
       uses: ./_action_files
 
