@@ -8,7 +8,7 @@ from urllib.parse import quote
 
 def replacer(p, tgt=False):
   if tgt:
-    _x = "/images/"+p.name
+    _x = "./images/"+p.name
   else:
     _x = quote(p.parent.name)+"/"+quote(p.name)
   return _x
@@ -37,7 +37,7 @@ for p in image_paths:
     newpath = Path(os.path.join(p.parent,newname))
     os.rename(p, newpath)
     renamed_image_paths.append(newpath)
-    shutil.move(str(newpath), os.path.join('/images'))   
+    shutil.move(str(newpath), os.path.join('./images'))   
 
 sourcestr = [replacer(x) for x in image_paths]
 targetstr = [replacer(x, True) for x in renamed_image_paths]
