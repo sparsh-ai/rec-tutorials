@@ -59,7 +59,7 @@ for p in Path(source_path).rglob('*.md'):
     data = ['---\n'] + data[2:]
   with open(p, 'w') as fout:
     fout.writelines(data)
-  newname = clean_path(p.name)
+  newname = clean_path("2020-01-01-"+p.name)
   newpath = Path(os.path.join(p.parent,newname))
   os.rename(p, newpath)
   shutil.move(str(newpath), target_path)
