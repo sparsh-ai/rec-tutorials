@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>How I personalized my YouTube recommendation using YT API | rec-tutorials</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="How I personalized my YouTube recommendation using YT API" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="How to utilize most of YouTube’s API?" />
+<meta property="og:description" content="How to utilize most of YouTube’s API?" />
+<link rel="canonical" href="https://sparsh-ai.github.io/rec-tutorials/video/2021/06/08/youtube-personalized-recommender-api.html" />
+<meta property="og:url" content="https://sparsh-ai.github.io/rec-tutorials/video/2021/06/08/youtube-personalized-recommender-api.html" />
+<meta property="og:site_name" content="rec-tutorials" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-06-08T00:00:00-05:00" />
+<script type="application/ld+json">
+{"url":"https://sparsh-ai.github.io/rec-tutorials/video/2021/06/08/youtube-personalized-recommender-api.html","@type":"BlogPosting","headline":"How I personalized my YouTube recommendation using YT API","dateModified":"2021-06-08T00:00:00-05:00","datePublished":"2021-06-08T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://sparsh-ai.github.io/rec-tutorials/video/2021/06/08/youtube-personalized-recommender-api.html"},"description":"How to utilize most of YouTube’s API?","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/rec-tutorials/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://sparsh-ai.github.io/rec-tutorials/feed.xml" title="rec-tutorials" /><link rel="shortcut icon" type="image/x-icon" href="/rec-tutorials/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/rec-tutorials/">rec-tutorials</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/rec-tutorials/about/">About Me</a><a class="page-link" href="/rec-tutorials/search/">Search</a><a class="page-link" href="/rec-tutorials/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How I personalized my YouTube recommendation using YT API</h1><p class="page-description">How to utilize most of YouTube’s API?</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-06-08T00:00:00-05:00" itemprop="datePublished">
+        Jun 8, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      14 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/rec-tutorials/categories/#video">video</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/sparsh-ai/rec-tutorials/tree/master/_notebooks/2021-06-08-youtube-personalized-recommender-api.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/rec-tutorials/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/sparsh-ai/rec-tutorials/master?filepath=_notebooks%2F2021-06-08-youtube-personalized-recommender-api.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/rec-tutorials/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/sparsh-ai/rec-tutorials/blob/master/_notebooks/2021-06-08-youtube-personalized-recommender-api.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/rec-tutorials/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-06-08-youtube-personalized-recommender-api.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://miro.medium.com/max/513/0*RjycuvCHOmNiI8fd.gif" alt="yt_anime"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Source: <a href="https://pub.towardsai.net/how-i-personalized-my-youtube-recommendation-using-yt-api-d20f6174bdaa">https://pub.towardsai.net/how-i-personalized-my-youtube-recommendation-using-yt-api-d20f6174bdaa</a></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">google</span><span class="o">-</span><span class="n">api</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="n">client</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">2020</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%SZ'</span><span class="p">)</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">2021</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%SZ'</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">apiclient.discovery</span> <span class="kn">import</span> <span class="n">build</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="s1">'AIzaSyCjHWHTmed0fhMZJDRdedQDku5qJv12xkY'</span> <span class="c1"># Enter your own API key – this one won’t work</span>
+
+<span class="n">youtube</span> <span class="o">=</span> <span class="n">build</span><span class="p">(</span><span class="s1">'youtube'</span><span class="p">,</span> <span class="s1">'v3'</span><span class="p">,</span> <span class="n">developerKey</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">youtube</span><span class="o">.</span><span class="n">search</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="s2">"Twenty One Pilots"</span><span class="p">,</span> <span class="n">part</span><span class="o">=</span><span class="s2">"snippet"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"video"</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">"viewCount"</span><span class="p">,</span><span class="n">publishedAfter</span><span class="o">=</span><span class="n">start_time</span><span class="p">,</span>
+                            <span class="n">publishedBefore</span><span class="o">=</span><span class="n">end_time</span><span class="p">,</span> <span class="n">maxResults</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">results</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'etag': 'M_SjX0wrTNP-85kVxzdTtkOur6w',
+ 'items': [{'etag': '6LzSrCbs_mcbkY8Ybal4xSU94A0',
+   'id': {'kind': 'youtube#video', 'videoId': '3sO-Y1Zbft4'},
+   'kind': 'youtube#searchResult',
+   'snippet': {'channelId': 'UCBQZwaNPFfJ1gZ1fLZpAEGw',
+    'channelTitle': 'twenty one pilots',
+    'description': 'Twenty One Pilots - Shy Away (Official Video) Twenty One Pilots official video for "Shy Away" from the forthcoming album Scaled And Icy, available May 21st on ...',
+    'liveBroadcastContent': 'none',
+    'publishTime': '2021-04-07T17:11:05Z',
+    'publishedAt': '2021-04-07T17:11:05Z',
+    'thumbnails': {'default': {'height': 90,
+      'url': 'https://i.ytimg.com/vi/3sO-Y1Zbft4/default.jpg',
+      'width': 120},
+     'high': {'height': 360,
+      'url': 'https://i.ytimg.com/vi/3sO-Y1Zbft4/hqdefault.jpg',
+      'width': 480},
+     'medium': {'height': 180,
+      'url': 'https://i.ytimg.com/vi/3sO-Y1Zbft4/mqdefault.jpg',
+      'width': 320}},
+    'title': 'Twenty One Pilots - Shy Away (Official Video)'}},
+  {'etag': '9YhOTRTgaSDErxxIE5RLEIPzi3o',
+   'id': {'kind': 'youtube#video', 'videoId': '2sBRnnnZyFw'},
+   'kind': 'youtube#searchResult',
+   'snippet': {'channelId': 'UCBQZwaNPFfJ1gZ1fLZpAEGw',
+    'channelTitle': 'twenty one pilots',
+    'description': 'Twenty One Pilots official video for "Choker" from the forthcoming album Scaled And Icy, available May 21st on Fueled By Ramen. Twenty One Pilots ...',
+    'liveBroadcastContent': 'none',
+    'publishTime': '2021-04-30T04:00:15Z',
+    'publishedAt': '2021-04-30T04:00:15Z',
+    'thumbnails': {'default': {'height': 90,
+      'url': 'https://i.ytimg.com/vi/2sBRnnnZyFw/default.jpg',
+      'width': 120},
+     'high': {'height': 360,
+      'url': 'https://i.ytimg.com/vi/2sBRnnnZyFw/hqdefault.jpg',
+      'width': 480},
+     'medium': {'height': 180,
+      'url': 'https://i.ytimg.com/vi/2sBRnnnZyFw/mqdefault.jpg',
+      'width': 320}},
+    'title': 'Twenty One Pilots - Choker (Official Video)'}},
+  {'etag': 'pZVtx8z5Xm4y0C76koR4V1_b9rg',
+   'id': {'kind': 'youtube#video', 'videoId': 'ozXb10fOi2A'},
+   'kind': 'youtube#searchResult',
+   'snippet': {'channelId': 'UCBQZwaNPFfJ1gZ1fLZpAEGw',
+    'channelTitle': 'twenty one pilots',
+    'description': 'twenty one pilots - Christmas Saves The Year (Official Audio) official audio for twenty one pilots holiday track “Christmas Saves The Year" - available now on ...',
+    'liveBroadcastContent': 'none',
+    'publishTime': '2020-12-09T02:00:09Z',
+    'publishedAt': '2020-12-09T02:00:09Z',
+    'thumbnails': {'default': {'height': 90,
+      'url': 'https://i.ytimg.com/vi/ozXb10fOi2A/default.jpg',
+      'width': 120},
+     'high': {'height': 360,
+      'url': 'https://i.ytimg.com/vi/ozXb10fOi2A/hqdefault.jpg',
+      'width': 480},
+     'medium': {'height': 180,
+      'url': 'https://i.ytimg.com/vi/ozXb10fOi2A/mqdefault.jpg',
+      'width': 320}},
+    'title': 'twenty one pilots - Christmas Saves The Year (Official Audio)'}},
+  {'etag': 'Iej2LWe6Cgn0JYBNDagJgIo66Co',
+   'id': {'kind': 'youtube#video', 'videoId': 'IAVy8gI7HOQ'},
+   'kind': 'youtube#searchResult',
+   'snippet': {'channelId': 'UCnX0L9QiftAcWdzeBx31xCw',
+    'channelTitle': 'Twenty One Pilots - Topic',
+    'description': 'Provided to YouTube by Fueled By Ramen Shy Away · twenty one pilots Shy Away ℗ 2021 Fueled By Ramen LLC Writer: Tyler Joseph Auto-generated by ...',
+    'liveBroadcastContent': 'none',
+    'publishTime': '2021-04-07T17:16:54Z',
+    'publishedAt': '2021-04-07T17:16:54Z',
+    'thumbnails': {'default': {'height': 90,
+      'url': 'https://i.ytimg.com/vi/IAVy8gI7HOQ/default.jpg',
+      'width': 120},
+     'high': {'height': 360,
+      'url': 'https://i.ytimg.com/vi/IAVy8gI7HOQ/hqdefault.jpg',
+      'width': 480},
+     'medium': {'height': 180,
+      'url': 'https://i.ytimg.com/vi/IAVy8gI7HOQ/mqdefault.jpg',
+      'width': 320}},
+    'title': 'Shy Away'}},
+  {'etag': 'PqY7uJ2kHbBDzswh7S5NjxZmI1U',
+   'id': {'kind': 'youtube#video', 'videoId': 'DpvUuXNiQ3w'},
+   'kind': 'youtube#searchResult',
+   'snippet': {'channelId': 'UCgXHRvdkaJmGtW-h-KnR7TA',
+    'channelTitle': 'Nightdrives',
+    'description': 'This is a 1 hour version of the song Hometown by Twenty one Pilots. This the sad part of the song in a slowed version for 1 hour straight. Perfect for when you ...',
+    'liveBroadcastContent': 'none',
+    'publishTime': '2020-10-26T19:02:50Z',
+    'publishedAt': '2020-10-26T19:02:50Z',
+    'thumbnails': {'default': {'height': 90,
+      'url': 'https://i.ytimg.com/vi/DpvUuXNiQ3w/default.jpg',
+      'width': 120},
+     'high': {'height': 360,
+      'url': 'https://i.ytimg.com/vi/DpvUuXNiQ3w/hqdefault.jpg',
+      'width': 480},
+     'medium': {'height': 180,
+      'url': 'https://i.ytimg.com/vi/DpvUuXNiQ3w/mqdefault.jpg',
+      'width': 320}},
+    'title': 'Hometown (Slowed // Sad part) 1 HOUR'}}],
+ 'kind': 'youtube#searchListResponse',
+ 'nextPageToken': 'CAUQAA',
+ 'pageInfo': {'resultsPerPage': 5, 'totalResults': 1000000},
+ 'regionCode': 'US'}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">video_statistics</span> <span class="o">=</span> <span class="n">youtube</span><span class="o">.</span><span class="n">videos</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">'geW09OOqieU'</span><span class="p">,</span>
+                                        <span class="n">part</span><span class="o">=</span><span class="s1">'statistics'</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+<span class="n">video_statistics</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'etag': 'mwdHggSG7B3y-3WwPQak2___hAs',
+ 'items': [{'etag': '9KcOBfpSxFpJ8LqOMh8I5WnRjOw',
+   'id': 'geW09OOqieU',
+   'kind': 'youtube#video',
+   'statistics': {'commentCount': '7652',
+    'dislikeCount': '78214',
+    'favoriteCount': '0',
+    'likeCount': '441332',
+    'viewCount': '63588476'}}],
+ 'kind': 'youtube#videoListResponse',
+ 'pageInfo': {'resultsPerPage': 1, 'totalResults': 1}}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">'items'</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="s1">'snippet'</span><span class="p">][</span><span class="s1">'publishedAt'</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">'snippet'</span><span class="p">][</span><span class="s1">'title'</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">'snippet'</span><span class="p">][</span><span class="s1">'publishedAt'</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">'id'</span><span class="p">][</span><span class="s1">'videoId'</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Hometown (Slowed // Sad part) 1 HOUR 2020-10-26T19:02:50Z DpvUuXNiQ3w
+twenty one pilots - Christmas Saves The Year (Official Audio) 2020-12-09T02:00:09Z ozXb10fOi2A
+Twenty One Pilots - Shy Away (Official Video) 2021-04-07T17:11:05Z 3sO-Y1Zbft4
+Shy Away 2021-04-07T17:16:54Z IAVy8gI7HOQ
+Twenty One Pilots - Choker (Official Video) 2021-04-30T04:00:15Z 2sBRnnnZyFw
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">get_start_date_string</span><span class="p">(</span><span class="n">search_period_days</span><span class="p">):</span>
+    <span class="sd">"""Returns string for date at start of search period."""</span>
+    <span class="n">search_start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">search_period_days</span><span class="p">)</span>
+    <span class="n">date_string</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">search_start_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span><span class="n">month</span><span class="o">=</span><span class="n">search_start_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span>
+                           <span class="n">day</span><span class="o">=</span><span class="n">search_start_date</span><span class="o">.</span><span class="n">day</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%SZ'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">date_string</span>
+<span class="n">get_start_date_string</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'2021-04-12T00:00:00Z'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">find_title</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'snippet'</span><span class="p">][</span><span class="s1">'title'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">title</span>
+
+<span class="k">def</span> <span class="nf">find_video_url</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">video_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'id'</span><span class="p">][</span><span class="s1">'videoId'</span><span class="p">]</span>
+    <span class="n">video_url</span> <span class="o">=</span> <span class="s2">"https://www.youtube.com/watch?v="</span> <span class="o">+</span> <span class="n">video_id</span>
+    <span class="k">return</span> <span class="n">video_url</span>
+
+<span class="k">def</span> <span class="nf">find_viewcount</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">youtube</span><span class="p">):</span>
+    <span class="n">video_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'id'</span><span class="p">][</span><span class="s1">'videoId'</span><span class="p">]</span>
+    <span class="n">video_statistics</span> <span class="o">=</span> <span class="n">youtube</span><span class="o">.</span><span class="n">videos</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">video_id</span><span class="p">,</span>
+                                        <span class="n">part</span><span class="o">=</span><span class="s1">'statistics'</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="n">viewcount</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">video_statistics</span><span class="p">[</span><span class="s1">'items'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'statistics'</span><span class="p">][</span><span class="s1">'viewCount'</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">viewcount</span>
+
+<span class="k">def</span> <span class="nf">find_likecount</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">youtube</span><span class="p">):</span>
+    <span class="n">video_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'id'</span><span class="p">][</span><span class="s1">'videoId'</span><span class="p">]</span>
+    <span class="n">video_statistics</span> <span class="o">=</span> <span class="n">youtube</span><span class="o">.</span><span class="n">videos</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">video_id</span><span class="p">,</span>
+                                        <span class="n">part</span><span class="o">=</span><span class="s1">'statistics'</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="n">likecount</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">video_statistics</span><span class="p">[</span><span class="s1">'items'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'statistics'</span><span class="p">][</span><span class="s1">'likeCount'</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">likecount</span>
+
+<span class="k">def</span> <span class="nf">find_dislikecount</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">youtube</span><span class="p">):</span>
+    <span class="n">video_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'id'</span><span class="p">][</span><span class="s1">'videoId'</span><span class="p">]</span>
+    <span class="n">video_statistics</span> <span class="o">=</span> <span class="n">youtube</span><span class="o">.</span><span class="n">videos</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">video_id</span><span class="p">,</span>
+                                        <span class="n">part</span><span class="o">=</span><span class="s1">'statistics'</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="n">dislikecount</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">video_statistics</span><span class="p">[</span><span class="s1">'items'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'statistics'</span><span class="p">][</span><span class="s1">'dislikeCount'</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">dislikecount</span>
+
+<span class="k">def</span> <span class="nf">find_channel_id</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'snippet'</span><span class="p">][</span><span class="s1">'channelId'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">channel_id</span>
+
+<span class="k">def</span> <span class="nf">find_channel_url</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'snippet'</span><span class="p">][</span><span class="s1">'channelId'</span><span class="p">]</span>
+    <span class="n">channel_url</span> <span class="o">=</span> <span class="s2">"https://www.youtube.com/channel/"</span> <span class="o">+</span> <span class="n">channel_id</span>
+    <span class="k">return</span> <span class="n">channel_url</span>
+
+<span class="k">def</span> <span class="nf">find_channel_title</span><span class="p">(</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">youtube</span><span class="p">):</span>
+    <span class="n">channel_search</span> <span class="o">=</span> <span class="n">youtube</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span>
+                                            <span class="n">part</span><span class="o">=</span><span class="s1">'brandingSettings'</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="n">channel_name</span> <span class="o">=</span> <span class="n">channel_search</span><span class="p">[</span><span class="s1">'items'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>\
+                                    <span class="p">[</span><span class="s1">'brandingSettings'</span><span class="p">][</span><span class="s1">'channel'</span><span class="p">][</span><span class="s1">'title'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">channel_name</span>
+
+<span class="k">def</span> <span class="nf">find_num_subscribers</span><span class="p">(</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">youtube</span><span class="p">):</span>
+    <span class="n">subs_search</span> <span class="o">=</span> <span class="n">youtube</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span>
+                                            <span class="n">part</span><span class="o">=</span><span class="s1">'statistics'</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">subs_search</span><span class="p">[</span><span class="s1">'items'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'statistics'</span><span class="p">][</span><span class="s1">'hiddenSubscriberCount'</span><span class="p">]:</span>
+        <span class="n">num_subscribers</span> <span class="o">=</span> <span class="mi">1000000</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">num_subscribers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">subs_search</span><span class="p">[</span><span class="s1">'items'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>\
+                                    <span class="p">[</span><span class="s1">'statistics'</span><span class="p">][</span><span class="s1">'subscriberCount'</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">num_subscribers</span>
+
+<span class="k">def</span> <span class="nf">view_to_sub_ratio</span><span class="p">(</span><span class="n">viewcount</span><span class="p">,</span> <span class="n">num_subscribers</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">num_subscribers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="n">viewcount</span> <span class="o">/</span> <span class="n">num_subscribers</span>
+        <span class="k">return</span> <span class="n">ratio</span>
+
+<span class="k">def</span> <span class="nf">how_old</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">when_published</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'snippet'</span><span class="p">][</span><span class="s1">'publishedAt'</span><span class="p">]</span>
+    <span class="n">when_published_datetime_object</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">when_published</span><span class="p">,</span>
+                                                        <span class="s1">'%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%SZ'</span><span class="p">)</span>
+    <span class="n">today_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+    <span class="n">days_since_published</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">today_date</span> <span class="o">-</span> <span class="n">when_published_datetime_object</span><span class="p">)</span><span class="o">.</span><span class="n">days</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">days_since_published</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">days_since_published</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">days_since_published</span>
+
+<span class="k">def</span> <span class="nf">find_count</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="s1">'snippet'</span><span class="p">][</span><span class="s1">'title'</span><span class="p">]</span> <span class="ow">and</span> <span class="n">item</span><span class="p">[</span><span class="s1">'snippet'</span><span class="p">][</span><span class="s1">'description'</span><span class="p">]:</span> 
+    <span class="n">count</span><span class="o">+=</span><span class="mi">1</span>
+  <span class="k">return</span> <span class="n">count</span>
+
+<span class="k">def</span> <span class="nf">custom_score</span><span class="p">(</span><span class="n">likecount</span><span class="p">,</span> <span class="n">dislikecount</span><span class="p">,</span> <span class="n">viewcount</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">days_since_published</span><span class="p">):</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> 
+    <span class="n">score</span> <span class="o">=</span> <span class="p">(</span><span class="n">viewcount</span> <span class="o">*</span> <span class="n">ratio</span><span class="p">)</span> <span class="o">/</span> <span class="n">days_since_published</span>
+    <span class="k">return</span> <span class="n">score</span> <span class="o">+</span> <span class="p">(</span><span class="n">likecount</span><span class="o">/</span><span class="n">dislikecount</span><span class="p">)</span> <span class="o">+</span> <span class="n">count</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">search_each_term</span><span class="p">(</span><span class="n">search_terms</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">uploaded_since</span><span class="p">,</span>
+                        <span class="n">views_threshold</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">num_to_print</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">"""Uses search term list to execute API calls and print results."""</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">search_terms</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">search_terms</span> <span class="o">=</span> <span class="p">[</span><span class="n">search_terms</span><span class="p">]</span>
+
+    <span class="n">list_of_dfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">search_term</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">search_terms</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">find_videos</span><span class="p">(</span><span class="n">search_terms</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">views_threshold</span><span class="o">=</span><span class="n">views_threshold</span><span class="p">,</span>
+                         <span class="n">uploaded_since</span> <span class="o">=</span> <span class="n">uploaded_since</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'Custom_Score'</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">list_of_dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="c1"># 1 - concatenate them all</span>
+    <span class="n">full_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">list_of_dfs</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">full_df</span> <span class="o">=</span> <span class="n">full_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'Custom_Score'</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"THE TOP VIDEOS OVERALL ARE:"</span><span class="p">)</span>
+    <span class="n">print_featured_videos</span><span class="p">(</span><span class="n">full_df</span><span class="p">,</span> <span class="n">num_to_print</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"==========================</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># 2 - in total</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">search_term</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">search_terms</span><span class="p">):</span>
+        <span class="n">results_df</span> <span class="o">=</span> <span class="n">list_of_dfs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"THE TOP VIDEOS FOR SEARCH TERM '</span><span class="si">{}</span><span class="s2">':"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">search_terms</span><span class="p">[</span><span class="n">index</span><span class="p">]))</span>
+        <span class="n">print_featured_videos</span><span class="p">(</span><span class="n">results_df</span><span class="p">,</span> <span class="n">num_to_print</span><span class="p">)</span>
+
+    <span class="n">results_df_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">search_terms</span><span class="p">,</span> <span class="n">list_of_dfs</span><span class="p">))</span>
+    <span class="n">results_df_dict</span><span class="p">[</span><span class="s1">'top_videos'</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_df</span>
+
+    <span class="k">return</span> <span class="n">results_df_dict</span>
+
+
+<span class="k">def</span> <span class="nf">find_videos</span><span class="p">(</span><span class="n">search_terms</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">views_threshold</span><span class="p">,</span> <span class="n">uploaded_since</span><span class="p">):</span>
+    <span class="sd">"""Calls other functions (below) to find results and populate dataframe."""</span>
+
+    <span class="c1"># Initialise results dataframe</span>
+    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s1">'Title'</span><span class="p">,</span> <span class="s1">'Video URL'</span><span class="p">,</span> <span class="s1">'Custom_Score'</span><span class="p">,</span>
+                            <span class="s1">'Views'</span><span class="p">,</span> <span class="s1">'Channel Name'</span><span class="p">,</span><span class="s1">'Num_subscribers'</span><span class="p">,</span>
+                            <span class="s1">'View-Subscriber Ratio'</span><span class="p">,</span><span class="s1">'Channel URL'</span><span class="p">))</span>
+
+    <span class="c1"># Run search</span>
+    <span class="n">search_results</span><span class="p">,</span> <span class="n">youtube_api</span> <span class="o">=</span> <span class="n">search_api</span><span class="p">(</span><span class="n">search_terms</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span>
+                                                        <span class="n">uploaded_since</span><span class="p">)</span>
+
+    <span class="n">results_df</span> <span class="o">=</span> <span class="n">fill_dataframe</span><span class="p">(</span><span class="n">search_results</span><span class="p">,</span> <span class="n">youtube_api</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">,</span>
+                                                        <span class="n">views_threshold</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results_df</span>
+
+
+<span class="k">def</span> <span class="nf">search_api</span><span class="p">(</span><span class="n">search_terms</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">uploaded_since</span><span class="p">):</span>
+    <span class="sd">"""Executes search through API and returns result."""</span>
+
+    <span class="c1"># Initialise API call</span>
+    <span class="n">youtube_api</span> <span class="o">=</span> <span class="n">build</span><span class="p">(</span><span class="s1">'youtube'</span><span class="p">,</span> <span class="s1">'v3'</span><span class="p">,</span> <span class="n">developerKey</span> <span class="o">=</span> <span class="n">api_key</span><span class="p">)</span>
+
+    <span class="c1">#Make the search</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">youtube_api</span><span class="o">.</span><span class="n">search</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="n">search_terms</span><span class="p">,</span> <span class="n">part</span><span class="o">=</span><span class="s1">'snippet'</span><span class="p">,</span>
+                                <span class="nb">type</span><span class="o">=</span><span class="s1">'video'</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">'viewCount'</span><span class="p">,</span> <span class="n">maxResults</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                <span class="n">publishedAfter</span><span class="o">=</span><span class="n">uploaded_since</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">results</span><span class="p">,</span> <span class="n">youtube_api</span>
+
+
+<span class="k">def</span> <span class="nf">fill_dataframe</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">youtube_api</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">views_threshold</span><span class="p">):</span>
+    <span class="sd">"""Extracts relevant information and puts into dataframe"""</span>
+    <span class="c1"># Loop over search results and add key information to dataframe</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s1">'items'</span><span class="p">]:</span>
+        <span class="n">viewcount</span> <span class="o">=</span> <span class="n">find_viewcount</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">youtube_api</span><span class="p">)</span>
+        <span class="c1">#likecount = find_likecount(item, youtube_api)</span>
+        <span class="c1">#dislikecount = find_dislikecount(item, youtube_api)</span>
+        <span class="k">if</span> <span class="n">viewcount</span> <span class="o">&gt;</span> <span class="n">views_threshold</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">find_title</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">video_url</span> <span class="o">=</span> <span class="n">find_video_url</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">channel_url</span> <span class="o">=</span> <span class="n">find_channel_url</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">channel_id</span> <span class="o">=</span> <span class="n">find_channel_id</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">channel_name</span> <span class="o">=</span> <span class="n">find_channel_title</span><span class="p">(</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">youtube_api</span><span class="p">)</span>
+            <span class="n">num_subs</span> <span class="o">=</span> <span class="n">find_num_subscribers</span><span class="p">(</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">youtube_api</span><span class="p">)</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="n">view_to_sub_ratio</span><span class="p">(</span><span class="n">viewcount</span><span class="p">,</span> <span class="n">num_subs</span><span class="p">)</span>
+            <span class="n">days_since_published</span> <span class="o">=</span> <span class="n">how_old</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">likecount</span> <span class="o">=</span> <span class="n">find_likecount</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">youtube</span><span class="p">)</span>
+            <span class="n">dislikecount</span> <span class="o">=</span> <span class="n">find_dislikecount</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">youtube</span><span class="p">)</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">custom_score</span><span class="p">(</span><span class="n">likecount</span><span class="p">,</span> <span class="n">dislikecount</span><span class="p">,</span> <span class="n">viewcount</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">days_since_published</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">title</span><span class="p">,</span> <span class="n">video_url</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">viewcount</span><span class="p">,</span> <span class="n">channel_name</span><span class="p">,</span>\
+                                    <span class="n">num_subs</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">channel_url</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="k">def</span> <span class="nf">print_featured_videos</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">num_to_print</span><span class="p">):</span>
+    <span class="sd">"""Prints top videos to console, with details and link to video."""</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_to_print</span><span class="p">:</span>
+        <span class="n">num_to_print</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_to_print</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"NO RESULTS"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_to_print</span><span class="p">):</span>
+            <span class="n">video</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">video</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span>
+            <span class="n">views</span> <span class="o">=</span> <span class="n">video</span><span class="p">[</span><span class="s1">'Views'</span><span class="p">]</span>
+            <span class="n">subs</span> <span class="o">=</span> <span class="n">video</span><span class="p">[</span><span class="s1">'Num_subscribers'</span><span class="p">]</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">video</span><span class="p">[</span><span class="s1">'Video URL'</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Video #</span><span class="si">{}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">The video '</span><span class="si">{}</span><span class="s2">' has </span><span class="si">{}</span><span class="s2"> views, from a channel </span><span class="se">\</span>
+<span class="s2">with </span><span class="si">{}</span><span class="s2"> subscribers and can be viewed here: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">"</span>\
+                                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">views</span><span class="p">,</span> <span class="n">subs</span><span class="p">,</span> <span class="n">link</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">search_each_term</span><span class="p">(</span><span class="s2">"Data Science"</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="s1">'2021-01-11T00:00:00Z'</span> <span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>THE TOP VIDEOS OVERALL ARE:
+Video #1:
+The video 'Become a DATA ANALYST with NO degree?!? The Google Data Analytics Professional Certificate' has 731020 views, from a channel with 37200 subscribers and can be viewed here: https://www.youtube.com/watch?v=fmLPS6FBbac
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+Video #2:
+The video 'Work Week in My Life as a Data Scientist' has 204983 views, from a channel with 9460 subscribers and can be viewed here: https://www.youtube.com/watch?v=yfLczGFw-ok
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+Video #3:
+The video 'Google vs IBM Data Analyst Certificate - BEST Certificate for Data Analysts' has 188597 views, from a channel with 37200 subscribers and can be viewed here: https://www.youtube.com/watch?v=jp-Lv_3a2VI
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+Video #4:
+The video 'Luminar Technolab, Data Science, AI, ML, Big Data Analytics, Python, Software Testing, MEAN STACK' has 57204 views, from a channel with 600 subscribers and can be viewed here: https://www.youtube.com/watch?v=FzMncStFvns
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+Video #5:
+The video 'Data Science – будущее уже здесь // Как искусственный интеллект и нейросети меняют жизнь? 12+' has 168541 views, from a channel with 1930 subscribers and can be viewed here: https://www.youtube.com/watch?v=tk-vPly7vf4
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+==========================
+
+THE TOP VIDEOS FOR SEARCH TERM 'Data Science':
+Video #1:
+The video 'Become a DATA ANALYST with NO degree?!? The Google Data Analytics Professional Certificate' has 731020 views, from a channel with 37200 subscribers and can be viewed here: https://www.youtube.com/watch?v=fmLPS6FBbac
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+Video #2:
+The video 'Work Week in My Life as a Data Scientist' has 204983 views, from a channel with 9460 subscribers and can be viewed here: https://www.youtube.com/watch?v=yfLczGFw-ok
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+Video #3:
+The video 'Google vs IBM Data Analyst Certificate - BEST Certificate for Data Analysts' has 188597 views, from a channel with 37200 subscribers and can be viewed here: https://www.youtube.com/watch?v=jp-Lv_3a2VI
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+Video #4:
+The video 'Luminar Technolab, Data Science, AI, ML, Big Data Analytics, Python, Software Testing, MEAN STACK' has 57204 views, from a channel with 600 subscribers and can be viewed here: https://www.youtube.com/watch?v=FzMncStFvns
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+Video #5:
+The video 'Data Science – будущее уже здесь // Как искусственный интеллект и нейросети меняют жизнь? 12+' has 168541 views, from a channel with 1930 subscribers and can be viewed here: https://www.youtube.com/watch?v=tk-vPly7vf4
+
+]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'Data Science':                                                 Title  ...                                        Channel URL
+ 1   Become a DATA ANALYST with NO degree?!? The Go...  ...  https://www.youtube.com/channel/UCLLw7jmFsvfIV...
+ 6            Work Week in My Life as a Data Scientist  ...  https://www.youtube.com/channel/UCm4RlxY2d-bFl...
+ 7   Google vs IBM Data Analyst Certificate - BEST ...  ...  https://www.youtube.com/channel/UCLLw7jmFsvfIV...
+ 40  Luminar Technolab, Data Science, AI, ML, Big D...  ...  https://www.youtube.com/channel/UCya9kry_lyqBo...
+ 10  Data Science – будущее уже здесь // Как искусс...  ...  https://www.youtube.com/channel/UCFu9xJbz-DzBp...
+ 31  Data Science в стратегическом консалтинге – ка...  ...  https://www.youtube.com/channel/UCFu9xJbz-DzBp...
+ 2   ये Free IBM Courses जीवन बदल देंगी | 6-Month F...  ...  https://www.youtube.com/channel/UCKVdr_Lro6WDK...
+ 8   Data Analytics for Beginners | Google Data Ana...  ...  https://www.youtube.com/channel/UC_fyAp919RnkK...
+ 26  Нейросети помогают оставаться на связи // Data...  ...  https://www.youtube.com/channel/UCFu9xJbz-DzBp...
+ 4   Internship that made me rethink my career...(t...  ...  https://www.youtube.com/channel/UC2UXDak6o7rBm...
+ 20                            NJIT MAKES Data Science  ...  https://www.youtube.com/channel/UC1a7isVSMhccO...
+ 5   Got a new Job as Data scientist in England🥰 | ...  ...  https://www.youtube.com/channel/UC_r5eKP41yegj...
+ 17            Data Scientist vs Data Analyst (funny!)  ...  https://www.youtube.com/channel/UCLLw7jmFsvfIV...
+ 30  [FSH SPECIAL TOPIC] Data Science Topics for HI...  ...  https://www.youtube.com/channel/UCugKa_dTMkVvs...
+ 12  Data Science For Beginners | Career In Data Sc...  ...  https://www.youtube.com/channel/UCO3pT4ZI8x2RV...
+ 9    Data scientist Rebekah Jones arrested in Florida  ...  https://www.youtube.com/channel/UCjpzEgbbDUg4Y...
+ 28  Combien gagne un Data Scientist ? Les salaires...  ...  https://www.youtube.com/channel/UCnEHCrot2HkyS...
+ 43  Honest Review of IIT Madras Online B.Sc. Degre...  ...  https://www.youtube.com/channel/UCNliY-e1-7VNt...
+ 29  What&amp;#39;s the best certificate for data analy...  ...  https://www.youtube.com/channel/UC2UXDak6o7rBm...
+ 14                            Why I Quit Data Science  ...  https://www.youtube.com/channel/UCiT9RITQ9PW6B...
+ 21  Jim Cornette on Stephanie McMahon Talking Abou...  ...  https://www.youtube.com/channel/UClkZ_CUNwGavQ...
+ 25  Why You Probably Won&amp;#39;t Become a Data Scien...  ...  https://www.youtube.com/channel/UCiT9RITQ9PW6B...
+ 13  Live 15 hour Session In Implementing End To En...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 22                        علم البيانات - data science  ...  https://www.youtube.com/channel/UC4Y8dVfo_-ayd...
+ 27  How to learn math for data science (the minimi...  ...  https://www.youtube.com/channel/UC2UXDak6o7rBm...
+ 46  LinkedIn Free Courses With Certificate Python ...  ...  https://www.youtube.com/channel/UCNr_dWKxRanxF...
+ 42      The 7 Biggest Data Science  Beginner Mistakes  ...  https://www.youtube.com/channel/UCiT9RITQ9PW6B...
+ 33     Complete Road Map Towards Data Science In 2021  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 16  Feb12- Live Virtual Mock Interview To Real Int...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 3   Data Analysis with Python Course - Numpy, Pand...  ...  https://www.youtube.com/channel/UC8butISFwT-Wl...
+ 41  iNeuron Full Stack Data Science Course With 1 ...  ...  https://www.youtube.com/channel/UCb1GdqUqArXMQ...
+ 32  Bank Data Scientist reviews money laundering s...  ...  https://www.youtube.com/channel/UCNWh9GuY0APdp...
+ 24  What is Data Science and Data Analytics | Data...  ...  https://www.youtube.com/channel/UC_QpDH_oeU0jX...
+ 36      How to Go From Data Analyst to Data Scientist  ...  https://www.youtube.com/channel/UCiT9RITQ9PW6B...
+ 37                      How to get a data science job  ...  https://www.youtube.com/channel/UC2UXDak6o7rBm...
+ 11  WhatsApp Pink Virus in circulation can steal u...  ...  https://www.youtube.com/channel/UCrC8mOqJQpoB7...
+ 23  Python for Data Science Full Course | Data Sci...  ...  https://www.youtube.com/channel/UCObs0kLIrDjX2...
+ 47  The Art of Learning Data Science (How to learn...  ...  https://www.youtube.com/channel/UCV8e2g4IWQqK7...
+ 44  Introduction | Mathematics and statistics for ...  ...  https://www.youtube.com/channel/UCh9nVJoWXmFb7...
+ 15  Data Analytics In Excel Full Course | Data Ana...  ...  https://www.youtube.com/channel/UCsvqVGtbbyHaM...
+ 38  Feb 2 - Live Virtual Mock Interview Of Fresher...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 19  Breaking Down 2020 Results With Data Scientist...  ...  https://www.youtube.com/channel/UCaXkIU1QidjPw...
+ 49  Amazing Data Science End To End Project From S...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 18  freeCodeCamp.org Curriculum Expansion: Math + ...  ...  https://www.youtube.com/channel/UC8butISFwT-Wl...
+ 35                       Impfen | Data Science | ARTE  ...  https://www.youtube.com/channel/UCLLibJTCy3sXj...
+ 50  Successful Transition From Mechanical Engineer...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 45  Feb 3- Live Virtual Mock Interview Of Freshers...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 48  Live Virtual Mock Interview For Data Science Role  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 34  Vaccins : comment juger leur impact ? | Data S...  ...  https://www.youtube.com/channel/UCwI-JbGNsojun...
+ 39  Data Science with Python | Python For Data Sci...  ...  https://www.youtube.com/channel/UCCktnahuRFYIB...
+ 
+ [50 rows x 8 columns],
+ 'top_videos':                                                 Title  ...                                        Channel URL
+ 1   Become a DATA ANALYST with NO degree?!? The Go...  ...  https://www.youtube.com/channel/UCLLw7jmFsvfIV...
+ 6            Work Week in My Life as a Data Scientist  ...  https://www.youtube.com/channel/UCm4RlxY2d-bFl...
+ 7   Google vs IBM Data Analyst Certificate - BEST ...  ...  https://www.youtube.com/channel/UCLLw7jmFsvfIV...
+ 40  Luminar Technolab, Data Science, AI, ML, Big D...  ...  https://www.youtube.com/channel/UCya9kry_lyqBo...
+ 10  Data Science – будущее уже здесь // Как искусс...  ...  https://www.youtube.com/channel/UCFu9xJbz-DzBp...
+ 31  Data Science в стратегическом консалтинге – ка...  ...  https://www.youtube.com/channel/UCFu9xJbz-DzBp...
+ 2   ये Free IBM Courses जीवन बदल देंगी | 6-Month F...  ...  https://www.youtube.com/channel/UCKVdr_Lro6WDK...
+ 8   Data Analytics for Beginners | Google Data Ana...  ...  https://www.youtube.com/channel/UC_fyAp919RnkK...
+ 26  Нейросети помогают оставаться на связи // Data...  ...  https://www.youtube.com/channel/UCFu9xJbz-DzBp...
+ 4   Internship that made me rethink my career...(t...  ...  https://www.youtube.com/channel/UC2UXDak6o7rBm...
+ 20                            NJIT MAKES Data Science  ...  https://www.youtube.com/channel/UC1a7isVSMhccO...
+ 5   Got a new Job as Data scientist in England🥰 | ...  ...  https://www.youtube.com/channel/UC_r5eKP41yegj...
+ 17            Data Scientist vs Data Analyst (funny!)  ...  https://www.youtube.com/channel/UCLLw7jmFsvfIV...
+ 30  [FSH SPECIAL TOPIC] Data Science Topics for HI...  ...  https://www.youtube.com/channel/UCugKa_dTMkVvs...
+ 12  Data Science For Beginners | Career In Data Sc...  ...  https://www.youtube.com/channel/UCO3pT4ZI8x2RV...
+ 9    Data scientist Rebekah Jones arrested in Florida  ...  https://www.youtube.com/channel/UCjpzEgbbDUg4Y...
+ 28  Combien gagne un Data Scientist ? Les salaires...  ...  https://www.youtube.com/channel/UCnEHCrot2HkyS...
+ 43  Honest Review of IIT Madras Online B.Sc. Degre...  ...  https://www.youtube.com/channel/UCNliY-e1-7VNt...
+ 29  What&amp;#39;s the best certificate for data analy...  ...  https://www.youtube.com/channel/UC2UXDak6o7rBm...
+ 14                            Why I Quit Data Science  ...  https://www.youtube.com/channel/UCiT9RITQ9PW6B...
+ 21  Jim Cornette on Stephanie McMahon Talking Abou...  ...  https://www.youtube.com/channel/UClkZ_CUNwGavQ...
+ 25  Why You Probably Won&amp;#39;t Become a Data Scien...  ...  https://www.youtube.com/channel/UCiT9RITQ9PW6B...
+ 13  Live 15 hour Session In Implementing End To En...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 22                        علم البيانات - data science  ...  https://www.youtube.com/channel/UC4Y8dVfo_-ayd...
+ 27  How to learn math for data science (the minimi...  ...  https://www.youtube.com/channel/UC2UXDak6o7rBm...
+ 46  LinkedIn Free Courses With Certificate Python ...  ...  https://www.youtube.com/channel/UCNr_dWKxRanxF...
+ 42      The 7 Biggest Data Science  Beginner Mistakes  ...  https://www.youtube.com/channel/UCiT9RITQ9PW6B...
+ 33     Complete Road Map Towards Data Science In 2021  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 16  Feb12- Live Virtual Mock Interview To Real Int...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 3   Data Analysis with Python Course - Numpy, Pand...  ...  https://www.youtube.com/channel/UC8butISFwT-Wl...
+ 41  iNeuron Full Stack Data Science Course With 1 ...  ...  https://www.youtube.com/channel/UCb1GdqUqArXMQ...
+ 32  Bank Data Scientist reviews money laundering s...  ...  https://www.youtube.com/channel/UCNWh9GuY0APdp...
+ 24  What is Data Science and Data Analytics | Data...  ...  https://www.youtube.com/channel/UC_QpDH_oeU0jX...
+ 36      How to Go From Data Analyst to Data Scientist  ...  https://www.youtube.com/channel/UCiT9RITQ9PW6B...
+ 37                      How to get a data science job  ...  https://www.youtube.com/channel/UC2UXDak6o7rBm...
+ 11  WhatsApp Pink Virus in circulation can steal u...  ...  https://www.youtube.com/channel/UCrC8mOqJQpoB7...
+ 23  Python for Data Science Full Course | Data Sci...  ...  https://www.youtube.com/channel/UCObs0kLIrDjX2...
+ 47  The Art of Learning Data Science (How to learn...  ...  https://www.youtube.com/channel/UCV8e2g4IWQqK7...
+ 44  Introduction | Mathematics and statistics for ...  ...  https://www.youtube.com/channel/UCh9nVJoWXmFb7...
+ 15  Data Analytics In Excel Full Course | Data Ana...  ...  https://www.youtube.com/channel/UCsvqVGtbbyHaM...
+ 38  Feb 2 - Live Virtual Mock Interview Of Fresher...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 19  Breaking Down 2020 Results With Data Scientist...  ...  https://www.youtube.com/channel/UCaXkIU1QidjPw...
+ 49  Amazing Data Science End To End Project From S...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 18  freeCodeCamp.org Curriculum Expansion: Math + ...  ...  https://www.youtube.com/channel/UC8butISFwT-Wl...
+ 35                       Impfen | Data Science | ARTE  ...  https://www.youtube.com/channel/UCLLibJTCy3sXj...
+ 50  Successful Transition From Mechanical Engineer...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 45  Feb 3- Live Virtual Mock Interview Of Freshers...  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 48  Live Virtual Mock Interview For Data Science Role  ...  https://www.youtube.com/channel/UCNU_lfiiWBdtU...
+ 34  Vaccins : comment juger leur impact ? | Data S...  ...  https://www.youtube.com/channel/UCwI-JbGNsojun...
+ 39  Data Science with Python | Python For Data Sci...  ...  https://www.youtube.com/channel/UCCktnahuRFYIB...
+ 
+ [50 rows x 8 columns]}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="sparsh-ai/rec-tutorials"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/rec-tutorials/video/2021/06/08/youtube-personalized-recommender-api.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/rec-tutorials/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/rec-tutorials/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/rec-tutorials/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Tutorials on Recommender Systems with ready-to-use jupyter notebooks</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/sparsh-ai" title="sparsh-ai"><svg class="svg-icon grey"><use xlink:href="/rec-tutorials/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
