@@ -34,7 +34,6 @@ jobs:
       run: |
         wget -O ./_posts/raw/data.zip ${{ secrets.NOTION_RECOBLOG }}
         python convert.py
-        cp -r ./_posts/img/*.png ./images
 
     - name: convert notebooks and word docs to posts
       uses: ./_action_files
