@@ -56,8 +56,7 @@ for p in Path(source_path).rglob('*.md'):
     for check, rep in zip(sourcestr2, targetstr2):
       data = data.replace(check, rep)
     data = data.splitlines(True)
-    repheader = '---\nimage: ./images/copied_md_images/_posts-raw-recobook-{}-untitled.png\n'.format(clean_path(p.stem))
-    data = [repheader] + data[2:]
+    data = ['---\n'] + data[2:]
   with open(p, 'w') as fout:
     fout.writelines(data)
   newname = clean_path("2020-01-01-"+p.name)
